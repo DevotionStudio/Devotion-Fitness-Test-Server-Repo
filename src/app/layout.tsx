@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
+import { CursorGlow } from "@/components/cursor-glow";
 
 // UI / display font, DeskWolf house style.
 const sans = Plus_Jakarta_Sans({
@@ -69,16 +70,17 @@ export const viewport: Viewport = {
 };
 
 // Runs before React hydrates; prevents the "flash of wrong theme."
+// Default is DARK. Only switches to light if the user has explicitly
+// chosen light via the toggle (which writes to localStorage).
 const themeBoot = `
 (function () {
   try {
     var stored = localStorage.getItem('devotion:theme');
-    var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = stored === 'light' || stored === 'dark'
-      ? stored
-      : (systemDark ? 'dark' : 'light');
+    var theme = stored === 'light' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
-  } catch (_) {}
+  } catch (_) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
 })();
 `.trim();
 
@@ -88,7 +90,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <CursorGlow />
+        {children}
+      </body>
     </html>
   );
 }

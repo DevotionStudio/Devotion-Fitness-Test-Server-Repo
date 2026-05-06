@@ -591,6 +591,39 @@
   [data-theme="dark"] .hero-glow::before { opacity: 0.40; }
   [data-theme="dark"] .hero-glow::after { opacity: 0.30; }
 
+  /* Cursor-follow glow — soft violet orb that tracks the mouse.
+     Position is set via JS (transform). Hidden on touch + reduced motion. */
+  .cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle,
+      rgb(var(--oxblood-rgb) / 0.20),
+      rgb(var(--oxblood-2-rgb) / 0.10) 40%,
+      transparent 70%);
+    filter: blur(60px);
+    mix-blend-mode: screen;
+    z-index: 0;
+    opacity: 0;
+    will-change: transform, opacity;
+    transition: opacity 220ms ease;
+  }
+  [data-theme="dark"] .cursor-glow {
+    background: radial-gradient(circle,
+      rgb(var(--oxblood-rgb) / 0.28),
+      rgb(var(--oxblood-2-rgb) / 0.14) 40%,
+      transparent 70%);
+    mix-blend-mode: screen;
+  }
+  /* Hide on touch devices and when reduced motion is preferred */
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    .cursor-glow { display: none; }
+  }
+
   /* ─── Buttons — sharp, modern, web-feel ───────── */
   .btn-d {
     display: inline-flex;
