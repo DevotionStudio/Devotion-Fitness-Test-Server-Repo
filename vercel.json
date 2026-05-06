@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "devotionfitness.co.uk" }],
+      "destination": "https://devotion.fitness/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.devotionfitness.co.uk" }],
+      "destination": "https://devotion.fitness/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.devotion.fitness" }],
+      "destination": "https://devotion.fitness/:path*",
+      "permanent": true
+    }
+  ]
+}
