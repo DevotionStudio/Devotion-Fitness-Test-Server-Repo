@@ -4,6 +4,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { Wordmark } from "@/components/wordmark";
 import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  PhoneMockup,
+  TodayScreen,
+  ReviewScreen,
+  OnboardingScreen,
+} from "@/components/phone-mockup";
 
 export default function Home() {
   return (
@@ -53,27 +59,40 @@ function SiteHeader() {
 
 function Hero() {
   return (
-    <section className="container-d pt-16 md:pt-24 pb-20 md:pb-28">
-      <div className="max-w-[920px]">
-        <span className="kicker">A daily strength practice</span>
-        <h1 className="display-1 mt-6">
-          Strength is a <em className="text-oxblood not-italic">discipline</em>,<br />
-          not a download.
-        </h1>
-        <p className="lead mt-7 max-w-[600px]">
-          Devotion programs your week, captures every set, and writes you a one-paragraph review every Sunday. No streaks. No badges. No noise.
-        </p>
-        <div className="mt-10 flex flex-wrap items-center gap-3">
-          <a href="#join" className="btn-d btn-d-accent">Start training →</a>
-          <a href="#how" className="btn-d btn-d-ghost">See how it works</a>
+    <section className="container-d relative pt-16 md:pt-24 pb-20 md:pb-28 overflow-hidden">
+      <div className="hero-glow" aria-hidden="true" />
+      <div className="relative grid gap-12 lg:gap-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] items-center">
+        <div className="max-w-[640px]">
+          <span className="kicker">A daily strength practice</span>
+          <h1 className="display-1 mt-6">
+            Strength is a <em className="text-oxblood not-italic">discipline</em>,<br />
+            not a download.
+          </h1>
+          <p className="lead mt-7 max-w-[560px]">
+            Devotion programs your week, captures every set, and writes you a one-paragraph review every Sunday. No streaks. No badges. No noise.
+          </p>
+          <div className="mt-10 flex flex-wrap items-center gap-3">
+            <a href="#join" className="btn-d btn-d-accent">Start training →</a>
+            <a href="#how" className="btn-d btn-d-ghost">See how it works</a>
+          </div>
+          <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-ash">
+            <span className="inline-flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-oxblood inline-block" aria-hidden="true" />
+              Founder pricing — £75 lifetime
+            </span>
+            <span className="hidden sm:inline text-line" aria-hidden="true">·</span>
+            <span>First 100 lifters only</span>
+          </div>
         </div>
-        <div className="mt-8 flex items-center gap-3 text-sm text-ash">
-          <span className="inline-flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-oxblood inline-block" aria-hidden="true" />
-            Founder pricing — £75 lifetime
-          </span>
-          <span className="text-line" aria-hidden="true">·</span>
-          <span>First 100 lifters only</span>
+        <div className="hidden lg:block justify-self-end relative">
+          <div
+            className="absolute -inset-10 rounded-full blur-3xl opacity-40"
+            style={{ background: "radial-gradient(circle, rgb(var(--oxblood-rgb) / 0.35), transparent 70%)" }}
+            aria-hidden="true"
+          />
+          <PhoneMockup label="Today's session preview" className="relative">
+            <TodayScreen />
+          </PhoneMockup>
         </div>
       </div>
     </section>
@@ -164,62 +183,78 @@ function Benefits() {
 
 function Practice() {
   return (
-    <section id="practice" className="container-d py-20 md:py-28 border-t border-line bg-bone2">
-      <div className="grid gap-12 md:gap-16 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] items-center">
-        <div>
-          <span className="kicker">See it in action</span>
-          <h2 className="display-2 mt-5">
-            One screen. Today's lift.
-          </h2>
-          <p className="lead mt-5 max-w-[520px]">
-            The day's session, the target weight, the last time you did it. A checkbox per set. A coach's note when you need one. Nothing else competing for attention.
-          </p>
-          <p className="lead mt-4 max-w-[520px]">
-            Sunday brings the review — one short paragraph that reads what the week actually did, not what it counted.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/today" className="btn-d btn-d-primary">Open the practice</Link>
-            <Link href="/review" className="btn-d btn-d-ghost">See the Sunday review</Link>
-          </div>
-        </div>
+    <section id="practice" className="container-d py-20 md:py-28 border-t border-line bg-bone2 overflow-hidden">
+      <div className="max-w-[760px] relative">
+        <span className="kicker">See it in action</span>
+        <h2 className="display-2 mt-5">The whole loop, in three screens.</h2>
+        <p className="lead mt-5 max-w-[600px]">
+          Onboarding shapes the plan in ten minutes. Today shows you exactly what to lift. Sunday tells you what the week actually did.
+        </p>
+      </div>
 
-        {/* Browser-frame mockup */}
-        <div className="rounded-2xl overflow-hidden border border-line bg-bone shadow-[0_30px_60px_-20px_rgb(var(--ink-rgb)/0.26)]">
-          <div className="flex items-center gap-1.5 px-4 py-3 bg-bone2 border-b border-line">
-            <span className="w-2.5 h-2.5 rounded-full bg-oxblood/40" aria-hidden="true" />
-            <span className="w-2.5 h-2.5 rounded-full bg-oxblood/30" aria-hidden="true" />
-            <span className="w-2.5 h-2.5 rounded-full bg-oxblood/20" aria-hidden="true" />
-            <span className="ml-3 text-xs text-ash truncate">devotion.fitness/today</span>
-          </div>
-          <div className="p-7" aria-label="Today's session preview">
-            <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-[0.18em] text-ash font-semibold">Tuesday · Week 06</span>
-              <span className="text-xs uppercase tracking-[0.18em] text-oxblood font-semibold">Day 12</span>
-            </div>
-            <h3 className="display-3 mt-4 text-xl">Press &amp; pull</h3>
-            <span className="block w-full h-px bg-line mt-4" />
-            <ul className="mt-4 divide-y divide-line">
-              {[
-                ["Bench press", "82.5kg · 4 × 6"],
-                ["Pendlay row", "70kg · 4 × 8"],
-                ["Incline DB press", "30kg · 3 × 10"],
-                ["Face pull", "—"],
-              ].map(([n, m]) => (
-                <li key={n} className="flex items-baseline justify-between py-3">
-                  <span className="text-sm font-medium">{n}</span>
-                  <span className="text-sm tab-num text-ink-2">{m}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-5 p-4 rounded-xl bg-oxblood/8 border border-oxblood/20">
-              <p className="text-sm leading-relaxed text-ink-2">
-                <span className="text-oxblood font-semibold">+2.5kg on bench.</span> Earn it off the chest, no bounce.
-              </p>
-            </div>
-          </div>
+      <div className="relative mt-16">
+        <div
+          className="absolute -inset-x-20 -inset-y-10 rounded-full blur-3xl opacity-30 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at center, rgb(var(--oxblood-rgb) / 0.30), transparent 70%)" }}
+          aria-hidden="true"
+        />
+        <div className="relative grid gap-10 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
+          <PhoneCard
+            kicker="01 · Onboarding"
+            title="Six lessons, ten minutes."
+            body="The plan is shaped from your goal, equipment, and the days you actually have."
+            screen={<OnboardingScreen />}
+          />
+          <PhoneCard
+            kicker="02 · Today"
+            title="One screen. Today's lift."
+            body="Day's session, target weight, last time you did it. A checkbox per set. Nothing else."
+            screen={<TodayScreen />}
+            featured
+          />
+          <PhoneCard
+            kicker="03 · Sunday"
+            title="The review reads like a coach."
+            body="One short paragraph that reads what the week actually did, not what it counted."
+            screen={<ReviewScreen />}
+          />
         </div>
       </div>
+
+      <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
+        <Link href="/today" className="btn-d btn-d-primary">Open the practice</Link>
+        <Link href="/review" className="btn-d btn-d-ghost">See the Sunday review</Link>
+      </div>
     </section>
+  );
+}
+
+function PhoneCard({
+  kicker,
+  title,
+  body,
+  screen,
+  featured,
+}: {
+  kicker: string;
+  title: string;
+  body: string;
+  screen: React.ReactNode;
+  featured?: boolean;
+}) {
+  return (
+    <article className="grid gap-5 max-w-[320px] w-full">
+      <div className={featured ? "lg:-translate-y-4 transition-transform" : ""}>
+        <PhoneMockup label={title}>{screen}</PhoneMockup>
+      </div>
+      <div className="text-center">
+        <span className="text-[11px] uppercase tracking-[0.18em] font-semibold text-oxblood">
+          {kicker}
+        </span>
+        <h3 className="display-3 mt-2 text-lg">{title}</h3>
+        <p className="text-sm text-ink-2 mt-2 leading-relaxed">{body}</p>
+      </div>
+    </article>
   );
 }
 
