@@ -1,13 +1,23 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
 
-// Single font, DeskWolf house style. Plus Jakarta carries display + body.
+// UI / display font, DeskWolf house style.
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   style: ["normal", "italic"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+// Wordmark-only serif. Used to render the V-press's classic V; not used
+// elsewhere on the site. The original V-press logo (v6 W1 spec) was a
+// fancy serif V with the barbell plates sitting on the tips.
+const serif = Newsreader({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-wordmark",
   display: "swap",
 });
 
@@ -74,7 +84,7 @@ const themeBoot = `
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
       </head>

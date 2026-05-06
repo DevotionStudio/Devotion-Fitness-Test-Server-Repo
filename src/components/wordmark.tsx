@@ -28,7 +28,6 @@ export function Wordmark({
   ariaLabel?: string;
 }) {
   const px = sizePx[size];
-  const barbellH = Math.max(8, Math.round(px * 0.32));
 
   return (
     <span
@@ -48,23 +47,23 @@ export function Wordmark({
       <span className="wm-side wm-de" aria-hidden={expandable}>De</span>
       <span className="wm-v">
         V
-        <span
-          className="wm-barbell"
-          aria-hidden="true"
-          style={{ height: barbellH }}
-        >
-          <svg viewBox="0 0 100 38" preserveAspectRatio="xMidYMid meet">
+        <span className="wm-barbell" aria-hidden="true">
+          {/* tight viewBox: bar+plates fill the entire SVG box.
+              barbell aspect 100:26 — width 1.05em → height 0.273em.
+              the bar runs through y=13 (vertical centre) and plates touch
+              top (y=0) and bottom (y=26) of the SVG box. */}
+          <svg viewBox="0 0 100 26" preserveAspectRatio="xMidYMid meet">
             <line
-              x1="27"
-              y1="22"
-              x2="73"
-              y2="22"
+              x1="20"
+              y1="13"
+              x2="80"
+              y2="13"
               stroke="currentColor"
-              strokeWidth="6"
+              strokeWidth="5"
               strokeLinecap="round"
             />
-            <circle cx="20" cy="22" r="13" className="wm-plate" />
-            <circle cx="80" cy="22" r="13" className="wm-plate" />
+            <circle cx="13" cy="13" r="13" className="wm-plate" />
+            <circle cx="87" cy="13" r="13" className="wm-plate" />
           </svg>
         </span>
       </span>

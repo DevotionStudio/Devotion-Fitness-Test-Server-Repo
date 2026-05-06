@@ -142,19 +142,23 @@
   }
   .max-prose-d { max-width: 64rem; }
 
-  /* ─── Wordmark + V-press ──────────────────────── */
+  /* ─── Wordmark + V-press ─────────────────────────────────────────
+     Wordmark is the only place serif lives on this site. The V uses a
+     classic serif (Newsreader); De and otion stay in Plus Jakarta sans
+     for harmony with the rest of the UI. The barbell sits ON the V's
+     tips with no air gap — plates touching the letter, not floating.
+  ───────────────────────────────────────────────────────────────────── */
   .wm {
     display: inline-flex;
     align-items: baseline;
     font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
-    font-weight: 500;
-    font-feature-settings: "cv11";
+    font-weight: 600;
     letter-spacing: -0.025em;
     color: var(--ink);
     user-select: none;
     line-height: 1;
-    /* keep room for the barbell above the V */
-    padding-top: calc(0.45em);
+    /* a small amount of headroom so the bar doesn't get clipped */
+    padding-top: 0.18em;
   }
   .wm-italic { font-style: italic; }
   .wm-side, .wm-v {
@@ -164,20 +168,35 @@
   .wm-v {
     position: relative;
     color: var(--ink);
+    /* the V is the only serif glyph on the page */
+    font-family: var(--font-wordmark), "Newsreader", Georgia, serif;
+    font-weight: 500;
+    font-variation-settings: "opsz" 144;
+    letter-spacing: -0.04em;
+    margin: 0 0.04em;
   }
+  /* Plates sit ON the V's tips — plate bottoms align with the V's cap
+     line. SVG is tight (viewBox 100x26) so positioning is predictable.
+     The barbell renders directly above the V box top, with its CENTER
+     (the bar line) just above the V cap line and the plate bottoms
+     touching the cap line — exactly the v6 W1 look. */
   .wm-barbell {
     position: absolute;
     left: 50%;
-    bottom: 100%;
-    transform: translate(-50%, 18%);
-    width: 1.18em;
+    /* anchor the barbell so the bar (mid-SVG) sits right on the V's top
+       cap. plates straddle: bar centred on cap line, plates extend
+       slightly above and below the V's serif tips. matches v6 W1 spec. */
+    top: 0;
+    transform: translate(-50%, -55%);
+    width: 1.0em;
     color: var(--ink);
     pointer-events: none;
+    line-height: 0;
   }
   .wm-barbell svg {
     display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
     overflow: visible;
   }
   .wm-plate { fill: var(--ink); }
