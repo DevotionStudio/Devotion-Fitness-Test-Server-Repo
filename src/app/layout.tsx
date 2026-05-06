@@ -1,26 +1,52 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 
-const serif = Newsreader({
+// Single font, DeskWolf house style. Plus Jakarta carries display + body.
+const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  axes: ["opsz"],
-  variable: "--font-serif",
-  display: "swap",
-});
-
-const sans = Hanken_Grotesk({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-sans",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Devotion — A daily practice of strength",
+  metadataBase: new URL("https://devotion.fitness"),
+  title: {
+    default: "Devotion — A daily practice of strength",
+    template: "%s · Devotion",
+  },
   description:
-    "Devotion is a strength training practice — programmed, recorded, and reviewed weekly with calm, contemporary discipline.",
+    "Strength training as a daily practice. Programmed for you, captured set by set, reviewed weekly with the calm of an old craft. No streaks. No badges. No noise.",
+  keywords: [
+    "strength training app",
+    "programmed lifting",
+    "workout programming",
+    "daily lifting practice",
+    "no streaks fitness app",
+    "powerlifting app",
+    "hypertrophy programming",
+  ],
+  authors: [{ name: "Devotion" }],
+  openGraph: {
+    type: "website",
+    locale: "en_GB",
+    url: "https://devotion.fitness",
+    siteName: "Devotion",
+    title: "Devotion — A daily practice of strength",
+    description:
+      "Strength training as a daily practice. Programmed for you, captured set by set, reviewed weekly with the calm of an old craft.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Devotion — A daily practice of strength",
+    description:
+      "Strength training as a daily practice. Programmed, captured, reviewed.",
+  },
+  alternates: {
+    canonical: "https://devotion.fitness",
+  },
 };
 
 export const viewport: Viewport = {
@@ -48,7 +74,7 @@ const themeBoot = `
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
       </head>

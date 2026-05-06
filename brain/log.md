@@ -7,6 +7,7 @@ Kinds: `decision`, `ingest`, `analysis`, `lint`, `migration`, `journal`, `releas
 
 ---
 
+## [2026-05-06] release | site is LIVE at https://devotion.fitness — GitHub + Vercel + GoDaddy DNS all wired
 ## [2026-05-06] migration | brain/ scaffolded — second-brain vault created mirroring BUNSHIN layout
 ## [2026-05-06] decision | bought devotion.fitness + devotionfitness.co.uk on GoDaddy (£15.65 total)
 ## [2026-05-06] release | shipped Newsreader serif, dark mode, hover-reveal expandable wordmark across all four pages

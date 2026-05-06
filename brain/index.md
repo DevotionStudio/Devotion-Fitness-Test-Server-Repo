@@ -31,6 +31,10 @@ category, with one line of summary. Update on every new page or major edit.
 
 In `Decisions/`, immutable, prepended with date. Most recent first.
 
+- [2026-05-07 future-llc-ltd-research](Decisions/2026-05-07%20future-llc-ltd-research.md)
+  — pending research; UK Ltd vs US LLC vs sole-trader decision tree.
+- [2026-05-06 deploy-to-vercel-and-go-live](Decisions/2026-05-06%20deploy-to-vercel-and-go-live.md)
+  — site shipped to https://devotion.fitness via GitHub + Vercel + GoDaddy DNS.
 - [2026-05-06 register-devotion-domains](Decisions/2026-05-06%20register-devotion-domains.md)
   — bought devotion.fitness + devotionfitness.co.uk via GoDaddy.
 - [2026-05-06 add-dark-mode](Decisions/2026-05-06%20add-dark-mode.md) —

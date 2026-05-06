@@ -125,19 +125,56 @@ Decision recorded: [Decisions/2026-05-06 add-dark-mode](../../../Decisions/2026-
 - ✅ Hover-reveal wordmark live
 - ✅ Domains registered
 - ✅ Second brain scaffolded
+- ✅ **GitHub repo created** (`Optionallll/devotion_app`, private)
+- ✅ **Vercel project deployed** (`optionalllls-projects/devotion-app`)
+- ✅ **GoDaddy DNS configured** (`@ → 76.76.21.21`, `www → cname.vercel-dns.com`)
+  — required deleting GoDaddy's parking-page A records (`A @ Parked` /
+  `A @ WebsiteBuilder Site`) and the auto-created bad CNAMEs that
+  pointed `www` at the domain itself
+- ✅ **SSL provisioned via Let's Encrypt** automatically once DNS was clean
+- ✅ **`https://devotion.fitness` is LIVE** — Owen confirmed seeing the
+  rendered site in his browser
+- ✅ `vercel.json` redirect rule committed (`devotionfitness.co.uk →
+  devotion.fitness`)
 
 ## What's open
 
-- DNS configuration (point both domains at hosting once we deploy).
-- Vercel deployment of the static site.
-- Cloudflare email routing for `hello@devotion.fitness`.
+- ⚠️ **`.co.uk` redirect not yet firing** — the `vercel.json` rule with
+  `has.host` matcher may need different syntax, or there's an edge
+  cache. Both domains currently serve identical content. Worth a 10-min
+  look tomorrow.
 - Phase 1 backend planning (auth, DB, programming engine, Sunday
   review writer).
 - Final brand-name lock-in (Devotion still flagged "working name").
+- Cloudflare email routing for `hello@devotion.fitness`.
+- Build out the actual app substance — Owen's framing: *"definitely
+  still lots to do like build the actual app itself but we will get
+  there and make it a 10k website and make our app look good
+  functioning and stuff."*
+- **Form a company for Devotion** — Owen plans to "buy an LLC". As a
+  UK-based founder this likely means a UK Ltd, not a US LLC. Research
+  doc: [Decisions/2026-05-07 future-llc-ltd-research](../../../Decisions/2026-05-07%20future-llc-ltd-research.md).
 
 ## Tomorrow / next session
 
-- Probably: deploy to Vercel, point devotion.fitness DNS, see the site
-  live on the real domain.
-- Possibly: start on the Phase 1 backend stack decision (Supabase vs
-  Postgres + Drizzle vs etc).
+- Walk through UK Ltd vs US LLC decision tree (confirm launch geography
+  first, then jurisdiction, then DIY-at-Companies-House vs formation
+  agent). See `Decisions/2026-05-07 future-llc-ltd-research.md`.
+- Quick fix on the `.co.uk` redirect rule.
+- Probably start moving toward Phase 1 — backend stack decision
+  (Supabase vs Postgres + Drizzle vs etc) once company structure is
+  decided (so the Stripe / Supabase accounts get created in the right
+  legal name from day one).
+
+## Owen's stated direction (quotes from end of session)
+
+> "I see it in my browser… definitely still lots to do like build the
+> actual app itself but we will get there and make it a 10k website
+> and make our app look good functioning and stuff."
+
+> "Plan is ima buy an LLC probably and we are going to have to find
+> out the best way to do that."
+
+The "10k website" framing is a useful anchor — Owen wants the marketing
+site to feel like a commissioned £10k design build, not an MVP. Hold
+this register when iterating on the marketing pages.

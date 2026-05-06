@@ -38,6 +38,16 @@
     --aurora-2: 125 62 232;
     --aurora-1-a: 0.18;
     --aurora-2-a: 0.14;
+
+    /* Single-font fallback so any older var(--font-serif) refs resolve to the new Plus Jakarta. */
+    --font-serif: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+
+    /* Premium soft shadows — DeskWolf house values, ink-tinted. */
+    --shadow-xs: 0 1px 2px rgb(var(--ink-rgb) / 0.05);
+    --shadow-sm: 0 2px 6px rgb(var(--ink-rgb) / 0.06);
+    --shadow-md: 0 10px 30px -12px rgb(var(--ink-rgb) / 0.18);
+    --shadow-lg: 0 30px 60px -20px rgb(var(--ink-rgb) / 0.26);
+    --shadow-violet: 0 12px 28px -10px rgb(var(--oxblood-rgb) / 0.42);
   }
 
   /* Dark theme — bone text on near-black aubergine */
@@ -67,22 +77,21 @@
   body {
     background: var(--bone);
     color: var(--ink);
-    font-family: var(--font-sans), "Hanken Grotesk", system-ui, sans-serif;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    letter-spacing: -0.005em;
+    letter-spacing: -0.01em;
     transition: background-color 220ms ease, color 220ms ease;
   }
   ::selection { background: var(--oxblood); color: var(--bone); }
   button { -webkit-tap-highlight-color: transparent; }
 
   h1, h2, h3, h4 {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
-    font-weight: 500;
-    font-variation-settings: "opsz" 144;
-    letter-spacing: -0.025em;
-    line-height: 1;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
     margin: 0;
     color: var(--ink);
   }
@@ -101,6 +110,21 @@
       radial-gradient(circle at 110% 105%,
         rgb(var(--aurora-2) / var(--aurora-2-a)),
         transparent 50%);
+  }
+  /* Grain — SVG noise overlay for printed-magazine feel */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  [data-theme="dark"] body::after {
+    opacity: 0.10;
+    mix-blend-mode: screen;
   }
   body > * { position: relative; z-index: 1; }
 }
@@ -122,9 +146,9 @@
   .wm {
     display: inline-flex;
     align-items: baseline;
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     font-weight: 500;
-    font-variation-settings: "opsz" 144;
+    font-feature-settings: "cv11";
     letter-spacing: -0.025em;
     color: var(--ink);
     user-select: none;
@@ -228,35 +252,35 @@
   [data-theme="dark"] .theme-icon-sun  { opacity: 0.45; }
   [data-theme="dark"] .theme-icon-moon { opacity: 1; }
 
-  /* ─── Editorial typography ────────────────────── */
+  /* ─── Display typography — DeskWolf-house scale ─── */
   .display-1 {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
-    font-weight: 500;
-    font-variation-settings: "opsz" 144;
-    font-size: clamp(56px, 10vw, 132px);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+    font-weight: 600;
+    font-feature-settings: "cv11";
+    font-size: clamp(38px, 5.5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
   }
   .display-2 {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
-    font-weight: 500;
-    font-variation-settings: "opsz" 144;
-    font-size: clamp(40px, 6vw, 80px);
-    line-height: 0.98;
-    letter-spacing: -0.03em;
-  }
-  .display-3 {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
-    font-weight: 500;
-    font-variation-settings: "opsz" 96;
-    font-size: clamp(28px, 4vw, 44px);
-    line-height: 1.05;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+    font-weight: 600;
+    font-feature-settings: "cv11";
+    font-size: clamp(28px, 3.5vw, 44px);
+    line-height: 1.1;
     letter-spacing: -0.025em;
   }
+  .display-3 {
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+    font-weight: 600;
+    font-feature-settings: "cv11";
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+  }
   .lead {
-    font-family: var(--font-sans), "Hanken Grotesk", system-ui, sans-serif;
-    font-size: clamp(17px, 1.6vw, 21px);
-    line-height: 1.55;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+    font-size: clamp(16px, 1.4vw, 19px);
+    line-height: 1.6;
     color: var(--ink-2);
     font-weight: 400;
   }
@@ -282,12 +306,176 @@
   .rule-ox { display: block; width: 48px; height: 2px; background: var(--oxblood); }
 
   .roman {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     font-style: italic;
     font-weight: 400;
     color: var(--oxblood);
     font-size: 14px;
     letter-spacing: 0.03em;
+  }
+
+  /* ─── DeskWolf-house cards + kicker ──────────── */
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+  }
+  .kicker::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--oxblood);
+    box-shadow: 0 0 0 4px rgb(var(--oxblood-rgb) / 0.16);
+  }
+
+  .card {
+    background: rgb(var(--tile-fill) / calc(var(--tile-fill-a) + 0.20));
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 200ms;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: rgb(var(--oxblood-rgb) / 0.30);
+  }
+
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--ink);
+    color: var(--bone);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .card-icon-violet {
+    background: var(--oxblood);
+    color: var(--bone);
+    box-shadow: var(--shadow-violet);
+  }
+
+  .num-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: var(--bone-2);
+    color: var(--oxblood);
+    border: 1px solid var(--line);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  /* ─── Premium pricing card — DeskWolf gradient-top pattern ─── */
+  .pcard {
+    border-radius: 24px;
+    background: rgb(var(--tile-fill) / calc(var(--tile-fill-a) + 0.30));
+    border: 1px solid var(--line);
+    overflow: hidden;
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .pcard:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .pcard--featured {
+    border-color: rgb(var(--oxblood-rgb) / 0.4);
+    box-shadow: var(--shadow-md);
+  }
+  .pcard__top {
+    padding: 28px 28px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pcard__top--dark {
+    background: linear-gradient(155deg,
+      rgb(var(--ink-rgb)) 0%,
+      rgb(var(--ink-2-rgb)) 100%);
+    color: var(--bone);
+    border-bottom: 0;
+  }
+  .pcard__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    background: rgb(var(--oxblood-rgb) / 0.18);
+    border: 1px solid rgb(var(--oxblood-rgb) / 0.35);
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--oxblood-2);
+  }
+  .pcard__badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--oxblood-2);
+    animation: pulse 1.8s ease-out infinite;
+  }
+  .pcard__price {
+    font-size: clamp(40px, 5vw, 56px);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .pcard__price .currency {
+    font-size: 0.5em;
+    font-weight: 500;
+    vertical-align: super;
+    opacity: 0.6;
+    margin-right: 2px;
+  }
+  .pcard__features {
+    list-style: none;
+    padding: 22px 28px 28px;
+    margin: 0;
+  }
+  .pcard__features li {
+    padding: 9px 0 9px 24px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .pcard__features li:last-child { border-bottom: 0; }
+  .pcard__features li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 13px;
+    width: 12px;
+    height: 7px;
+    border-left: 2px solid var(--oxblood);
+    border-bottom: 2px solid var(--oxblood);
+    transform: rotate(-45deg);
+  }
+  .pcard__top--dark .pcard__features li {
+    color: rgb(var(--bone-rgb) / 0.78);
+    border-bottom-color: rgb(var(--bone-rgb) / 0.10);
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.5; }
   }
 
   /* ─── Buttons — sharp, modern, web-feel ───────── */
@@ -350,24 +538,28 @@
   /* ─── Tile grids ──────────────────────────────── */
   .tile {
     text-align: left;
-    padding: 20px;
+    padding: 22px;
     border: 1px solid var(--line);
-    background: rgb(var(--tile-fill) / var(--tile-fill-a));
-    transition: border-color 150ms, background-color 150ms, box-shadow 150ms;
+    background: rgb(var(--tile-fill) / calc(var(--tile-fill-a) + 0.20));
+    transition: border-color 200ms, background-color 200ms, box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
     width: 100%;
-    border-radius: 14px;
+    border-radius: 18px;
   }
-  .tile:hover { border-color: var(--ink); }
+  .tile:hover {
+    border-color: rgb(var(--oxblood-rgb) / 0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
   .tile-on {
     border-color: var(--oxblood);
     background: rgb(var(--oxblood-rgb) / 0.08);
     box-shadow: inset 4px 0 0 0 var(--oxblood);
   }
   .tile-title {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     font-weight: 500;
-    font-variation-settings: "opsz" 96;
+    font-feature-settings: "cv11";
     font-size: 22px;
     line-height: 1.1;
     letter-spacing: -0.02em;
@@ -507,9 +699,9 @@
 
   /* Big numerics */
   .numeric-xl {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     font-weight: 500;
-    font-variation-settings: "opsz" 144;
+    font-feature-settings: "cv11";
     font-size: clamp(48px, 8vw, 72px);
     letter-spacing: -0.04em;
     line-height: 1;
@@ -517,9 +709,9 @@
     font-variant-numeric: tabular-nums;
   }
   .numeric-md {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     font-weight: 500;
-    font-variation-settings: "opsz" 96;
+    font-feature-settings: "cv11";
     font-size: 28px;
     line-height: 1;
     letter-spacing: -0.02em;
@@ -551,9 +743,9 @@
   .quote {
     border-left: 2px solid var(--ink);
     padding-left: 20px;
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     font-weight: 400;
-    font-variation-settings: "opsz" 24;
+    font-feature-settings: "cv11";
     font-size: 19px;
     line-height: 1.55;
     color: var(--ink);
@@ -565,7 +757,7 @@
 @layer utilities {
   .tab-num { font-variant-numeric: tabular-nums; }
   .italic-serif {
-    font-family: var(--font-serif), "Newsreader", Georgia, serif;
+    font-family: var(--font-sans), "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
     font-style: italic;
     font-weight: 400;
   }

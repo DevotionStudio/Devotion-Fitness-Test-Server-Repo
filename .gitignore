@@ -19,3 +19,5 @@ prompt-runs
 Thumbs.db
 .idea
 .vscode
+
+.vercel
