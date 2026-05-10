@@ -1,479 +1,385 @@
 "use client";
 
+import "./v3-home.css";
 import Link from "next/link";
-import { useState } from "react";
-import { Wordmark } from "@/components/wordmark";
-import { ThemeToggle } from "@/components/theme-toggle";
-import {
-  PhoneMockup,
-  TodayScreen,
-  ReviewScreen,
-  OnboardingScreen,
-} from "@/components/phone-mockup";
+import { useEffect, useRef } from "react";
+
+const MOVES = [
+  { num: "01 · Plan",    title: "A plan that fits you, today.",    body: "Tell us your goal — cutting, bulking, just stronger — and the app builds your week. Adjusts as life happens." },
+  { num: "02 · Train",   title: "Track every set, fast.",          body: "Big buttons, big numbers. Logs sets in seconds. Knows your last lift, your PR, your bar speed." },
+  { num: "03 · Coach",   title: "An AI in your corner.",           body: "Asks if a set felt easy. Suggests alternates when the rack is busy. Pushes you when you're flat." },
+  { num: "04 · Eat",     title: "Calories that just work.",        body: "Search any food in two taps. Macros land in your daily ring. Cutting or bulking — targets adapt." },
+  { num: "05 · Recover", title: "Earn your rest days.",            body: "Body readiness scoring per muscle. Banked rest days for streaks. No more guilt-skipping leg day." },
+];
+
+const TICKER_GROUP = [
+  { value: "3,420",      label: "sets logged today" },
+  { value: "14",         label: "PRs in the last hour" },
+  { value: "2,180 kcal", label: "today's calorie target" },
+  { value: "97%",        label: "plan adherence this week" },
+  { value: "2.4s",       label: "avg coach response" },
+];
+
+const FAQS: Array<[string, string]> = [
+  ["Who is Devotion for?",
+    "Anyone who's serious about training but tired of juggling three apps. Beginners get structure; experienced lifters get progression without the spreadsheet admin."],
+  ["What equipment do I need?",
+    "The plan adapts to a full gym, home gym, dumbbells only, minimal kit, or pure bodyweight. Tell us what you have, the plan builds around it."],
+  ["How does the AI coach work?",
+    "It reads your last sessions, your readiness, and your goals. It suggests easier or harder sets mid-workout, swaps exercises when the rack's busy, and answers questions in plain language."],
+  ["What about cutting and bulking?",
+    "Set your goal phase (cut / bulk / maintain). Calorie and macro targets adapt automatically. Switch phases anytime — the plan adjusts."],
+  ["Is there a free version?",
+    "Yes. Free covers logging, routines, and the basics. Upgrade when you want the AI coach, smart plan generator, and goal phases."],
+  ["When is the app launching?",
+    "Founder access is open now — first 500 lifters lock lifetime pricing. Public launch follows."],
+];
 
 export default function Home() {
   return (
-    <div className="shell">
-      <SiteHeader />
-      <main id="top">
+    <div className="v3-root">
+      <SiteNav />
+      <main>
         <Hero />
-        <Benefits />
-        <Practice />
-        <FeatureBreakdown />
+        <Ticker />
+        <Problem />
+        <Moves />
         <Pricing />
         <FAQ />
         <FinalCTA />
-        <SiteFooter />
       </main>
+      <SiteFooter />
       <PageSchema />
     </div>
   );
 }
 
-/* ─────────────────────────────────────────── */
-
-function SiteHeader() {
+function SiteNav() {
+  const navRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const update = () => {
+      const hero = document.getElementById("hero3");
+      if (!hero) return;
+      const heroBottom = hero.getBoundingClientRect().bottom;
+      nav.classList.toggle("on-dark", heroBottom > 60);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
   return (
-    <header className="container-d sticky top-0 z-30 bg-bone/85 backdrop-blur-md border-b border-line2">
-      <div className="flex items-center justify-between py-5">
-        <Link href="#top" aria-label="Devotion home">
-          <Wordmark size="sm" />
-        </Link>
-        <nav aria-label="Primary" className="hidden md:flex items-center gap-9">
-          <a href="#how" className="text-sm font-medium text-ink-2 hover:text-oxblood transition-colors">How it works</a>
-          <a href="#features" className="text-sm font-medium text-ink-2 hover:text-oxblood transition-colors">Features</a>
-          <a href="#pricing" className="text-sm font-medium text-ink-2 hover:text-oxblood transition-colors">Pricing</a>
-          <a href="#faq" className="text-sm font-medium text-ink-2 hover:text-oxblood transition-colors">FAQ</a>
-          <Link href="/onboarding" className="text-sm font-medium text-ink-2 hover:text-oxblood transition-colors">Begin</Link>
-        </nav>
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <a href="#join" className="btn-d btn-d-accent hidden sm:inline-flex">Start training</a>
-        </div>
-      </div>
-    </header>
+    <nav className="nav3" ref={navRef} aria-label="Primary">
+      <Link href="#top" className="nav3__brand"><span className="nav3__mark" aria-hidden />Devotion</Link>
+      <a href="#why" className="nav3__link">Why</a>
+      <a href="#how" className="nav3__link">How it works</a>
+      <a href="#pricing" className="nav3__link">Pricing</a>
+      <a href="#faq" className="nav3__link">FAQ</a>
+      <Link href="/onboarding" className="nav3__cta">Start free →</Link>
+    </nav>
   );
 }
-
-/* ─────────────────────────────────────────── */
 
 function Hero() {
+  const heroRef = useRef<HTMLElement | null>(null);
+  const cursorRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const hero = heroRef.current;
+    const cursor = cursorRef.current;
+    if (!hero || !cursor) return;
+    const onMove = (e: PointerEvent) => {
+      const rect = hero.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      cursor.style.transform = `translate3d(${x - 200}px, ${y - 200}px, 0)`;
+    };
+    hero.addEventListener("pointermove", onMove);
+    return () => { hero.removeEventListener("pointermove", onMove); };
+  }, []);
   return (
-    <section className="container-d relative pt-16 md:pt-24 pb-20 md:pb-28 overflow-hidden">
-      <div className="hero-glow" aria-hidden="true" />
-      <div className="relative grid gap-12 lg:gap-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] items-center">
-        <div className="max-w-[640px]">
-          <span className="kicker">A daily strength practice</span>
-          <h1 className="display-1 mt-6">
-            Strength is a <em className="text-oxblood not-italic">discipline</em>,<br />
-            not a download.
+    <section className="hero3" id="hero3" ref={heroRef}>
+      <div className="hero3__grid" aria-hidden />
+      <div className="hero3__aurora hero3__aurora--key" aria-hidden />
+      <div className="hero3__aurora hero3__aurora--rim" aria-hidden />
+      <div className="hero3__aurora hero3__aurora--base" aria-hidden />
+      <div className="hero3__vignette" aria-hidden />
+      <div className="hero3__edge" aria-hidden />
+      <div className="hero3__cursor" ref={cursorRef} aria-hidden />
+
+      <div className="container" id="top">
+        <div className="hero3__eyebrow">
+          <span className="hero3__eyebrow-rule" />
+          <span className="hero3__eyebrow-dot" />
+          <span className="hero3__eyebrow-text">Now in founder access · 500 places</span>
+          <span className="hero3__eyebrow-rule r" />
+        </div>
+
+        <div className="hero3__wordmark">
+          <h1>
+            <Word text="Train" baseDelay={0.4} />{" "}
+            <Word text="with" baseDelay={0.74} />{" "}
+            <Word text="devotion" baseDelay={1.06} className="word--devotion" />
+            <span className="hero3__period">.</span>
           </h1>
-          <p className="lead mt-7 max-w-[560px]">
-            Devotion programs your week, captures every set, and writes you a one-paragraph review every Sunday. No streaks. No badges. No noise.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center gap-3">
-            <a href="#join" className="btn-d btn-d-accent">Start training →</a>
-            <a href="#how" className="btn-d btn-d-ghost">See how it works</a>
-          </div>
-          <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-ash">
-            <span className="inline-flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-oxblood inline-block" aria-hidden="true" />
-              Founder pricing — £75 lifetime
-            </span>
-            <span className="hidden sm:inline text-line" aria-hidden="true">·</span>
-            <span>First 100 lifters only</span>
-          </div>
         </div>
-        <div className="hidden lg:block justify-self-end relative">
-          <div
-            className="absolute -inset-10 rounded-full blur-3xl opacity-40"
-            style={{ background: "radial-gradient(circle, rgb(var(--oxblood-rgb) / 0.35), transparent 70%)" }}
-            aria-hidden="true"
-          />
-          <PhoneMockup label="Today's session preview" className="relative">
-            <TodayScreen />
-          </PhoneMockup>
+
+        <p className="hero3__sub">
+          Your <strong>plan</strong>, your <strong>numbers</strong>, your <strong>coach</strong>. One app
+          that knows where you train, what you've eaten, and what your body's ready for — every single day.
+        </p>
+
+        <div className="hero3__ctas">
+          <Link href="/onboarding" className="btn3 btn3--accent">Start free →</Link>
+          <a href="#how" className="btn3 btn3--ghost-dark">See how it works</a>
         </div>
+
+        <HeroStage />
       </div>
     </section>
   );
 }
 
-/* ─────────────────────────────────────────── */
-
-const ICONS = {
-  plan: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20" aria-hidden="true">
-      <rect x="4" y="4" width="16" height="16" rx="3" />
-      <path d="M8 9h8M8 13h6M8 17h4" />
-    </svg>
-  ),
-  log: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20" aria-hidden="true">
-      <path d="M3 12h4l3-9 4 18 3-9h4" />
-    </svg>
-  ),
-  review: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20" aria-hidden="true">
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-    </svg>
-  ),
-  silence: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="20" height="20" aria-hidden="true">
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-      <line x1="3" y1="3" x2="21" y2="21" />
-    </svg>
-  ),
-};
-
-function Benefits() {
-  const items = [
-    {
-      n: "01",
-      icon: ICONS.plan,
-      title: "You stop deciding.",
-      body: "Every session is written before you arrive. You read it, you do it. Decision fatigue is the enemy of discipline; the program removes it.",
-    },
-    {
-      n: "02",
-      icon: ICONS.log,
-      title: "Every set captured.",
-      body: "Tabular weight, reps, RPE — the kind of log that compounds into proof. Not a feed. Not a scroll. The honest record of work done.",
-    },
-    {
-      n: "03",
-      icon: ICONS.review,
-      title: "Sundays read like a coach.",
-      body: "One paragraph at the end of the week. What worked, what slipped, what next week asks of you. Specific, written for the lifter you actually are.",
-    },
-    {
-      n: "04",
-      icon: ICONS.silence,
-      title: "Built for silence.",
-      body: "No streaks. No badges. No push notifications begging for your attention. The work is the reward; the app gets out of the way.",
-    },
-  ];
+function Word({ text, baseDelay, className = "" }: { text: string; baseDelay: number; className?: string }) {
   return (
-    <section id="how" className="container-d py-20 md:py-28 border-t border-line">
-      <div className="max-w-[760px]">
-        <span className="kicker">How it works</span>
-        <h2 className="display-2 mt-5">Built around four ideas.</h2>
-        <p className="lead mt-5 max-w-[560px]">
-          Strength training only compounds if you actually show up and the work is honest. Devotion is the smallest possible app that protects both.
-        </p>
-      </div>
-      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {items.map((it) => (
-          <article key={it.n} className="card p-7">
-            <div className="flex items-center justify-between">
-              <span className="card-icon card-icon-violet">{it.icon}</span>
-              <span className="num-badge">{it.n}</span>
+    <span className={`word ${className}`}>
+      {text.split("").map((ch, i) => (
+        <span key={i} className="letter" style={{ animationDelay: `${baseDelay + i * 0.06}s` }}>{ch}</span>
+      ))}
+    </span>
+  );
+}
+
+function HeroStage() {
+  return (
+    <div className="hero3__stage">
+      <Orbit position="pr" label="New PR" value="Bench · 92.5 kg" sub="+2.5 kg vs last week" />
+      <Orbit position="hr" label="Heart rate" value="142 bpm" sub="Zone 3 · steady" green />
+      <Orbit position="volume" label="Volume today" value="14,820 kg" sub="Push day · chest + tris" />
+      <Orbit position="coach" label="AI Coach" value="Easier set 4?" sub="Bar speed dropped 18%" />
+
+      <div className="phone3">
+        <div className="phone3__notch" />
+        <div className="phone3__screen">
+          <div className="wo3">
+            <div className="wo3__time">9:42 AM</div>
+            <div className="wo3__status">
+              <span className="wo3__status-dot" />
+              <span className="wo3__status-text">Workout · Push day</span>
             </div>
-            <h3 className="display-3 mt-5">{it.title}</h3>
-            <p className="text-sm leading-relaxed text-ink-2 mt-3">{it.body}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ─────────────────────────────────────────── */
-
-function Practice() {
-  return (
-    <section id="practice" className="container-d py-20 md:py-28 border-t border-line bg-bone2 overflow-hidden">
-      <div className="max-w-[760px] relative">
-        <span className="kicker">See it in action</span>
-        <h2 className="display-2 mt-5">The whole loop, in three screens.</h2>
-        <p className="lead mt-5 max-w-[600px]">
-          Onboarding shapes the plan in ten minutes. Today shows you exactly what to lift. Sunday tells you what the week actually did.
-        </p>
-      </div>
-
-      <div className="relative mt-16">
-        <div
-          className="absolute -inset-x-20 -inset-y-10 rounded-full blur-3xl opacity-30 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse at center, rgb(var(--oxblood-rgb) / 0.30), transparent 70%)" }}
-          aria-hidden="true"
-        />
-        <div className="relative grid gap-10 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
-          <PhoneCard
-            kicker="01 · Onboarding"
-            title="Six lessons, ten minutes."
-            body="The plan is shaped from your goal, equipment, and the days you actually have."
-            screen={<OnboardingScreen />}
-          />
-          <PhoneCard
-            kicker="02 · Today"
-            title="One screen. Today's lift."
-            body="Day's session, target weight, last time you did it. A checkbox per set. Nothing else."
-            screen={<TodayScreen />}
-            featured
-          />
-          <PhoneCard
-            kicker="03 · Sunday"
-            title="The review reads like a coach."
-            body="One short paragraph that reads what the week actually did, not what it counted."
-            screen={<ReviewScreen />}
-          />
-        </div>
-      </div>
-
-      <div className="mt-14 flex flex-wrap items-center justify-center gap-3">
-        <Link href="/today" className="btn-d btn-d-primary">Open the practice</Link>
-        <Link href="/review" className="btn-d btn-d-ghost">See the Sunday review</Link>
-      </div>
-    </section>
-  );
-}
-
-function PhoneCard({
-  kicker,
-  title,
-  body,
-  screen,
-  featured,
-}: {
-  kicker: string;
-  title: string;
-  body: string;
-  screen: React.ReactNode;
-  featured?: boolean;
-}) {
-  return (
-    <article className="grid gap-5 max-w-[320px] w-full">
-      <div className={featured ? "lg:-translate-y-4 transition-transform" : ""}>
-        <PhoneMockup label={title}>{screen}</PhoneMockup>
-      </div>
-      <div className="text-center">
-        <span className="text-[11px] uppercase tracking-[0.18em] font-semibold text-oxblood">
-          {kicker}
-        </span>
-        <h3 className="display-3 mt-2 text-lg">{title}</h3>
-        <p className="text-sm text-ink-2 mt-2 leading-relaxed">{body}</p>
-      </div>
-    </article>
-  );
-}
-
-/* ─────────────────────────────────────────── */
-
-function FeatureBreakdown() {
-  const rows = [
-    {
-      n: "01",
-      name: "Personalised programming",
-      sub: "Periodised cycles built around your goal, equipment, and the days you actually have.",
-      value: "£40/mo",
-      tag: "coaching value",
-    },
-    {
-      n: "02",
-      name: "Set-by-set capture",
-      sub: "Tabular logs, RPE, top-set tracking. The kind of record that compounds into real proof.",
-      value: "£15/mo",
-      tag: "tracking value",
-    },
-    {
-      n: "03",
-      name: "Sunday written review",
-      sub: "One short paragraph by Sunday night. Not a stat dump — a coach's read of your week.",
-      value: "£25/mo",
-      tag: "coach-prose value",
-    },
-    {
-      n: "04",
-      name: "Six-lesson onboarding",
-      sub: "Done in ten minutes. The plan is generated from your real life, not a generic template.",
-      value: "£20",
-      tag: "setup value",
-    },
-  ];
-  return (
-    <section id="features" className="container-d py-20 md:py-28 border-t border-line">
-      <div className="max-w-[760px]">
-        <span className="kicker">Do the math</span>
-        <h2 className="display-2 mt-5">What you actually get.</h2>
-        <p className="lead mt-5 max-w-[560px]">
-          Coaching, tracking, and weekly review usually cost separate things. Devotion bundles all three into the daily practice.
-        </p>
-      </div>
-
-      <div className="mt-12 rounded-2xl border border-line bg-bone overflow-hidden">
-        {rows.map((r, i) => (
-          <div
-            key={r.n}
-            className={`grid gap-3 sm:gap-6 px-5 md:px-8 py-6 sm:grid-cols-[44px_minmax(0,1fr)_auto] items-center ${i > 0 ? "border-t border-line" : ""}`}
-          >
-            <span className="num-badge hidden sm:inline-flex">{r.n}</span>
-            <div>
-              <div className="flex items-baseline gap-3">
-                <span className="num-badge sm:hidden">{r.n}</span>
-                <h3 className="display-3 text-lg md:text-xl">{r.name}</h3>
+            <div className="wo3__exercise">
+              <div className="wo3__exercise-name">Barbell Bench Press</div>
+              <div className="wo3__exercise-meta">Set 3 of 4 · last: 90 kg × 6</div>
+            </div>
+            <div className="wo3__set-board">
+              <SetRow n="1" weight="85" reps="8" done />
+              <SetRow n="2" weight="90" reps="7" done />
+              <SetRow n="3" weight="92.5" reps="—" active />
+              <SetRow n="4" weight="—" reps="—" />
+            </div>
+            <div className="wo3__rest">
+              <div>
+                <div className="wo3__rest-label">Resting</div>
+                <div className="wo3__rest-sub">Next: set 3</div>
               </div>
-              <p className="text-sm leading-relaxed text-ink-2 mt-2">{r.sub}</p>
+              <div className="wo3__rest-value">1:42</div>
             </div>
-            <div className="text-left sm:text-right mt-1 sm:mt-0">
-              <span className="font-semibold text-base md:text-lg tab-num">{r.value}</span>
-              <span className="text-xs uppercase tracking-[0.18em] ml-2 sm:ml-0 sm:block sm:mt-1 text-ash">
-                {r.tag}
-              </span>
-            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Orbit({ position, label, value, sub, green }: { position: "pr"|"hr"|"volume"|"coach"; label: string; value: string; sub: string; green?: boolean }) {
+  return (
+    <div className={`orbit3 orbit3--${position}`}>
+      <span className="orbit3__label">{label}</span>
+      <span className="orbit3__value">{value}</span>
+      <div className="orbit3__row">
+        <span className={`orbit3__swatch ${green ? "orbit3__swatch--green" : ""}`} />
+        <span className="orbit3__sub">{sub}</span>
+      </div>
+    </div>
+  );
+}
+
+function SetRow({ n, weight, reps, done, active }: { n: string; weight: string; reps: string; done?: boolean; active?: boolean }) {
+  const isPending = !done && !active;
+  return (
+    <div className={`wo3__set-row ${active ? "active" : ""}`} style={isPending ? { opacity: 0.5 } : undefined}>
+      <span className="wo3__set-num" style={active ? { color: "var(--violet-2)" } : undefined}>{n}</span>
+      <span className="wo3__set-val">{weight}<span> kg</span></span>
+      <span className="wo3__set-val">{reps}<span> reps</span></span>
+      <span className={`wo3__set-check ${!done ? "wo3__set-check--off" : ""}`}>{done ? "✓" : ""}</span>
+    </div>
+  );
+}
+
+function Ticker() {
+  const items = [...TICKER_GROUP, ...TICKER_GROUP];
+  return (
+    <div className="ticker3">
+      <div className="ticker3__inner">
+        {items.map((item, i) => (
+          <div key={i} style={{ display: "contents" }}>
+            <span className="ticker3__item">
+              {i % TICKER_GROUP.length === 0 ? <span className="ticker3__dot" /> : null}
+              <strong>{item.value}</strong> {item.label}
+            </span>
+            <span className="ticker3__sep">·</span>
           </div>
         ))}
       </div>
+    </div>
+  );
+}
 
-      <div className="mt-8 flex flex-wrap items-baseline justify-between gap-3 max-w-[760px]">
-        <p className="text-sm md:text-base text-ink-2">
-          A coach who'd assemble all of this would run roughly <strong className="text-ink">£100 a month.</strong>
-        </p>
-        <p className="text-2xl font-semibold text-oxblood tab-num">Devotion starts at £4.</p>
+function Problem() {
+  return (
+    <section className="section3 section3--washed" id="why">
+      <div className="container">
+        <div className="grid-2-end">
+          <div>
+            <span className="eyebrow3 eyebrow3--violet">The honest problem</span>
+            <h2 className="h3-1" style={{ marginTop: 16 }}>Most people quit by <em className="accent3">week 6</em>.</h2>
+            <p className="body3-lg" style={{ marginTop: 18 }}>
+              Generic plans, stale spreadsheets, and three apps that don't talk to each other. We built
+              Devotion because the gap between knowing what to do and actually doing it is where every
+              fitness journey dies.
+            </p>
+          </div>
+          <div className="stat3">
+            <div className="stat3__label">UK gym dropout</div>
+            <div className="stat3__big">73%</div>
+            <div className="stat3__sub">Quit within 6 months of joining.</div>
+            <div className="stat3__bar"><div className="stat3__bar-fill" /></div>
+            <div className="stat3__breakdown">
+              <div>
+                <div className="stat3__cell-value">£480</div>
+                <div className="stat3__cell-label">Wasted / yr</div>
+              </div>
+              <div>
+                <div className="stat3__cell-value">3 apps</div>
+                <div className="stat3__cell-label">Avg juggled</div>
+              </div>
+              <div>
+                <div className="stat3__cell-value">5 min</div>
+                <div className="stat3__cell-label">To log a meal</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-/* ─────────────────────────────────────────── */
+function Moves() {
+  return (
+    <section className="moves3" id="how">
+      <div className="moves3__intro">
+        <span className="moves3__kicker">How it works</span>
+        <h2 className="moves3__title">Five things, <em>one app</em>.</h2>
+        <p className="moves3__sub">
+          Plan, train, eat, recover, repeat. Devotion handles the loop so you can focus on showing up.
+        </p>
+      </div>
+      <ul className="moves3__list">
+        {MOVES.map((move) => (
+          <li key={move.num} className="move3">
+            <span className="move3__num">{move.num}</span>
+            <h3 className="move3__title">{move.title}</h3>
+            <p className="move3__body">{move.body}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
 function Pricing() {
   return (
-    <section id="pricing" className="container-d py-20 md:py-28 border-t border-line bg-bone2">
-      <div className="max-w-[760px]">
-        <span className="kicker">Pricing</span>
-        <h2 className="display-2 mt-5">Three ways to start.</h2>
-        <p className="lead mt-5 max-w-[560px]">
-          Standard tiers post-launch. The founder price disappears at lifter 101 — then it's gone.
-        </p>
-      </div>
-
-      <div className="mt-12 grid gap-5 lg:grid-cols-3">
-        {/* Monthly */}
-        <article className="pcard">
-          <div className="pcard__top">
-            <h3 className="display-3 text-xl">Monthly</h3>
-            <p className="text-sm text-ink-2 mt-1.5">Cancel anytime.</p>
-            <div className="pcard__price mt-6">
-              <span className="currency">£</span>6.99
-              <span className="text-base font-medium text-ash align-baseline ml-1">/mo</span>
+    <section className="section3 section3--bone" id="pricing">
+      <div className="container">
+        <div className="pricing3__intro">
+          <span className="eyebrow3 eyebrow3--violet">Simple pricing</span>
+          <h2 className="h3-2" style={{ marginTop: 14 }}>Pay less than your gym membership.</h2>
+          <p className="body3-lg" style={{ marginTop: 16, maxWidth: 540, marginLeft: "auto", marginRight: "auto" }}>
+            Start free. Upgrade when you want the AI coach, smart plans, and unlimited everything.
+          </p>
+        </div>
+        <div className="pricing3__grid">
+          <div className="pricing3__card">
+            <div className="pricing3__card-title">Monthly</div>
+            <div className="pricing3__card-tag">Cancel anytime</div>
+            <div>
+              <span className="pricing3__card-big">£6.99</span>
+              <span className="pricing3__card-cadence">/month</span>
             </div>
-          </div>
-          <ul className="pcard__features">
-            <li>Personalised programming</li>
-            <li>Set-by-set capture</li>
-            <li>Sunday written review</li>
-            <li>Cancel any time</li>
-          </ul>
-          <div className="px-7 pb-7">
-            <a href="#join" className="btn-d btn-d-primary w-full justify-center">Start monthly</a>
-          </div>
-        </article>
-
-        {/* Annual */}
-        <article className="pcard">
-          <div className="pcard__top">
-            <h3 className="display-3 text-xl">Annual</h3>
-            <p className="text-sm text-ink-2 mt-1.5">Save 42% — effectively £4.08/mo.</p>
-            <div className="pcard__price mt-6">
-              <span className="currency">£</span>49
-              <span className="text-base font-medium text-ash align-baseline ml-1">/yr</span>
-            </div>
-          </div>
-          <ul className="pcard__features">
-            <li>Everything in Monthly</li>
-            <li>Save 42% vs monthly</li>
-            <li>Locked-in pricing for the year</li>
-            <li>Cancel any time</li>
-          </ul>
-          <div className="px-7 pb-7">
-            <a href="#join" className="btn-d btn-d-primary w-full justify-center">Start annual</a>
-          </div>
-        </article>
-
-        {/* Founder */}
-        <article className="pcard pcard--featured">
-          <div className="pcard__top pcard__top--dark">
-            <span className="pcard__badge">Founder · 100 only</span>
-            <h3 className="display-3 text-xl mt-5" style={{ color: "var(--bone)" }}>Founder</h3>
-            <p className="text-sm mt-1.5" style={{ color: "rgb(var(--bone-rgb) / 0.72)" }}>Lifetime access. One payment, yours forever.</p>
-            <div className="pcard__price mt-6">
-              <span className="currency">£</span>75
-              <span className="text-base font-medium align-baseline ml-1" style={{ color: "rgb(var(--bone-rgb) / 0.55)" }}>once</span>
-            </div>
-            <ul className="pcard__features">
-              <li>Lifetime access — never billed again</li>
-              <li>All future features included</li>
-              <li>Founder badge in-app</li>
-              <li>Direct line to product feedback</li>
+            <ul className="pricing3__card-list">
+              <li>Unlimited workouts &amp; routines</li>
+              <li>Calorie + macro tracking</li>
+              <li>AI coach (chat + mid-set)</li>
+              <li>Sync across devices</li>
             </ul>
+            <Link href="/onboarding" className="btn3 btn3--ghost">Start free trial</Link>
           </div>
-          <div className="p-7">
-            <a href="#join" className="btn-d btn-d-accent w-full justify-center">Lock in founder price</a>
-            <p className="text-xs text-ash text-center mt-3">Available pre-launch only</p>
+
+          <div className="pricing3__card pricing3__card--featured">
+            <div className="pricing3__card-title">Annual</div>
+            <div className="pricing3__card-tag">Save £35 vs monthly</div>
+            <div>
+              <span className="pricing3__card-big">£49</span>
+              <span className="pricing3__card-cadence">/year</span>
+            </div>
+            <ul className="pricing3__card-list">
+              <li>Everything in Monthly</li>
+              <li>AI plan generator</li>
+              <li>Goal phases (cut / bulk / maintain)</li>
+              <li>Priority coach response</li>
+            </ul>
+            <Link href="/onboarding" className="btn3 btn3--accent">Get annual</Link>
           </div>
-        </article>
+
+          <div className="pricing3__card">
+            <div className="pricing3__card-title">Founder</div>
+            <div className="pricing3__card-tag">One-time, lifetime</div>
+            <div>
+              <span className="pricing3__card-big">£75</span>
+              <span className="pricing3__card-cadence">once</span>
+            </div>
+            <ul className="pricing3__card-list">
+              <li>Lifetime access, every feature</li>
+              <li>Direct line to the founders</li>
+              <li>Vote on the roadmap</li>
+              <li>Limited to first 500 members</li>
+            </ul>
+            <Link href="/onboarding" className="btn3 btn3--primary">Become a founder</Link>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-/* ─────────────────────────────────────────── */
-
 function FAQ() {
-  const qs = [
-    {
-      q: "I'm not a beginner. Will the programming actually challenge me?",
-      a: "Yes. The engine works from your current 1RM and progresses on RPE feedback. Heavy intermediates and advanced lifters get the same loading logic proven gyms use. The aesthetic is calm; the programming is not.",
-    },
-    {
-      q: "What equipment do I need?",
-      a: "Devotion adapts to what you have. Pick from full gym, home gym, dumbbells only, minimal, or pure bodyweight during onboarding. The program reshapes around your kit.",
-    },
-    {
-      q: "How is this different from Strong, Hevy, or Caliber?",
-      a: "Strong and Hevy log; they don't program. Caliber pairs you with a human coach for £150+/month. Devotion programs the work, captures it, and writes you a Sunday review for the price of a sandwich.",
-    },
-    {
-      q: "What if I miss a week?",
-      a: "The program reshapes. No streak to break, no shame screen. You come back, the next session reads your last entries, and the cycle adjusts.",
-    },
-    {
-      q: "Is this for women too?",
-      a: "Yes. The programming engine cares about your starting strength, recovery, and goals — not your sex. The aesthetic isn't pink, isn't bro. It's just calm.",
-    },
-    {
-      q: "When does it launch?",
-      a: "When the first 100 founders sign up. Pre-launch right now; the founder lifetime price is the launch threshold. After that, monthly and annual only.",
-    },
-    {
-      q: "Can I cancel anytime?",
-      a: "Monthly and annual cancel any time, no questions. Founder is one payment, yours forever.",
-    },
-  ];
   return (
-    <section id="faq" className="container-d py-20 md:py-28 border-t border-line">
-      <div className="grid gap-12 md:grid-cols-[300px_minmax(0,1fr)]">
+    <section className="section3" id="faq">
+      <div className="container grid-faq">
         <div>
-          <span className="kicker">FAQ</span>
-          <h2 className="display-2 mt-5">Common questions.</h2>
-          <p className="lead mt-5 max-w-[260px]">
-            Everything you'd ask before starting.
-          </p>
+          <span className="eyebrow3 eyebrow3--violet">FAQ</span>
+          <h2 className="h3-2" style={{ marginTop: 14 }}>Before you start.</h2>
         </div>
-        <div className="grid gap-3">
-          {qs.map((it, i) => (
-            <details key={i} className="card p-6 group">
-              <summary className="flex cursor-pointer items-center justify-between gap-6 list-none">
-                <h3 className="font-semibold text-base md:text-lg leading-snug">{it.q}</h3>
-                <span
-                  className="w-8 h-8 rounded-full bg-bone2 border border-line text-oxblood flex items-center justify-center transition-transform group-open:rotate-45 select-none shrink-0"
-                  aria-hidden="true"
-                >
-                  +
-                </span>
-              </summary>
-              <p className="text-sm leading-relaxed text-ink-2 mt-4 max-w-[660px]">{it.a}</p>
+        <div>
+          {FAQS.map(([q, a]) => (
+            <details className="faq3__row" key={q}>
+              <summary>{q}</summary>
+              <p className="faq3__answer">{a}</p>
             </details>
           ))}
         </div>
@@ -482,110 +388,58 @@ function FAQ() {
   );
 }
 
-/* ─────────────────────────────────────────── */
-
 function FinalCTA() {
-  const [email, setEmail] = useState("");
-  const [tier, setTier] = useState<"monthly" | "annual" | "founder" | "">("");
-  const [note, setNote] = useState("");
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || !tier) {
-      setNote("An email and a tier, please.");
-      return;
-    }
-    setNote("Welcome. We'll write back when the cycle opens.");
-    setEmail("");
-    setTier("");
-  };
-
   return (
-    <section id="join" className="container-d py-20 md:py-28 border-t border-line bg-ink text-bone">
-      <div className="grid gap-12 md:grid-cols-2 items-center">
-        <div>
-          <span className="kicker" style={{ color: "var(--oxblood-2)" }}>The list</span>
-          <h2 className="display-2 mt-5" style={{ color: "var(--bone)" }}>
-            Start training.
-          </h2>
-          <p className="mt-5 max-w-[460px] text-base leading-relaxed" style={{ color: "rgb(var(--bone-rgb) / 0.78)" }}>
-            The first 100 lifters lock the founder price — £75 lifetime, then it's gone. Leave your email and the plan you'd choose.
-          </p>
+    <section className="cta3">
+      <div className="cta3__inner">
+        <h2>Train with devotion. Today.</h2>
+        <p>Lock founder pricing while it's open. £75 once, every feature, forever.</p>
+        <div className="cta3__row">
+          <Link href="/onboarding" className="btn3 btn3--accent">Become a founder</Link>
+          <a href="#pricing" className="btn3 btn3--ghost-dark">See all plans</a>
         </div>
-        <form onSubmit={submit} className="grid gap-5 p-7 rounded-2xl bg-bone/5 border border-bone/10 backdrop-blur-sm">
-          <label className="grid gap-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: "rgb(var(--bone-rgb) / 0.7)" }}>Email</span>
-            <input
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              required
-              className="bg-transparent border-b border-bone/30 py-2.5 text-bone placeholder-bone/40 outline-none focus:border-oxblood transition-colors text-base"
-            />
-          </label>
-          <fieldset className="grid gap-2.5">
-            <legend className="text-xs font-semibold uppercase tracking-[0.18em] mb-1" style={{ color: "rgb(var(--bone-rgb) / 0.7)" }}>Plan</legend>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { id: "monthly", label: "Monthly" },
-                { id: "annual", label: "Annual" },
-                { id: "founder", label: "Founder" },
-              ].map((o) => (
-                <button
-                  key={o.id}
-                  type="button"
-                  onClick={() => setTier(o.id as typeof tier)}
-                  aria-pressed={tier === o.id}
-                  className={`py-3 px-4 rounded-full text-sm font-medium transition-colors ${
-                    tier === o.id ? "bg-oxblood text-bone" : "bg-bone/5 text-bone/70 hover:bg-bone/10 border border-bone/10"
-                  }`}
-                >
-                  {o.label}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-          <button type="submit" className="btn-d btn-d-accent justify-center mt-1">
-            Start training →
-          </button>
-          {note && (
-            <p className="text-sm" style={{ color: tier ? "var(--oxblood-2)" : "rgb(var(--bone-rgb) / 0.6)" }}>
-              {note}
-            </p>
-          )}
-        </form>
       </div>
     </section>
   );
 }
 
-/* ─────────────────────────────────────────── */
-
 function SiteFooter() {
   return (
-    <footer className="container-d py-12 border-t border-line bg-bone">
-      <div className="flex flex-wrap items-end justify-between gap-6">
-        <div>
-          <Wordmark size="sm" />
-          <p className="text-xs text-ash mt-3">A daily strength practice · Devotion Studio Ltd</p>
+    <footer className="foot3">
+      <div className="container">
+        <div className="foot3__grid">
+          <div>
+            <div className="foot3__brand"><span className="foot3__brand-mark" aria-hidden />Devotion</div>
+            <p className="foot3__tag">Train with devotion. The plan, the numbers, the coach — one app that gets you to the next session.</p>
+          </div>
+          <div className="foot3__col">
+            <h4>Product</h4>
+            <a href="#how">How it works</a>
+            <a href="#pricing">Pricing</a>
+            <Link href="/onboarding">Get started</Link>
+            <a href="#faq">FAQ</a>
+          </div>
+          <div className="foot3__col">
+            <h4>App</h4>
+            <Link href="/today">Today</Link>
+            <Link href="/review">Review</Link>
+            <Link href="/onboarding">Onboarding</Link>
+          </div>
+          <div className="foot3__col">
+            <h4>Legal</h4>
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+            <a href="mailto:contact@devotion.team">Contact</a>
+          </div>
         </div>
-        <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-2" aria-label="Footer">
-          <Link href="/onboarding" className="hover:text-oxblood transition-colors">Begin</Link>
-          <Link href="/today" className="hover:text-oxblood transition-colors">Today</Link>
-          <Link href="/review" className="hover:text-oxblood transition-colors">Review</Link>
-          <a href="#how" className="hover:text-oxblood transition-colors">How it works</a>
-          <a href="#pricing" className="hover:text-oxblood transition-colors">Pricing</a>
-          <a href="#faq" className="hover:text-oxblood transition-colors">FAQ</a>
-        </nav>
+        <div className="foot3__bot">
+          <span>© 2026 DEVOTION STUDIO LTD</span>
+          <span>devotion.fitness · Made in the UK</span>
+        </div>
       </div>
     </footer>
   );
 }
-
-/* ─────────────────────────────────────────── */
 
 function PageSchema() {
   const data = [
@@ -594,15 +448,7 @@ function PageSchema() {
       "@type": "Organization",
       name: "Devotion",
       url: "https://devotion.fitness",
-      slogan: "Strength is a discipline, not a download.",
-      description:
-        "A daily strength training practice — programmed, captured, and reviewed weekly.",
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: "Devotion",
-      url: "https://devotion.fitness",
+      slogan: "Train with devotion.",
     },
     {
       "@context": "https://schema.org",
@@ -610,32 +456,12 @@ function PageSchema() {
       name: "Devotion",
       applicationCategory: "HealthApplication",
       operatingSystem: "Web, iOS, Android",
-      description:
-        "A daily strength training practice — programmed for you, captured set by set, reviewed weekly.",
       offers: [
-        { "@type": "Offer", name: "Monthly", price: "6.99", priceCurrency: "GBP", category: "Subscription" },
-        { "@type": "Offer", name: "Annual", price: "49.00", priceCurrency: "GBP", category: "Subscription" },
-        { "@type": "Offer", name: "Founder", price: "75.00", priceCurrency: "GBP", category: "Lifetime", availability: "https://schema.org/LimitedAvailability" },
-      ],
-    },
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: [
-        { "@type": "Question", name: "I'm not a beginner. Will the programming actually challenge me?", acceptedAnswer: { "@type": "Answer", text: "Yes. The engine works from your current 1RM and progresses on RPE feedback. Heavy intermediates and advanced lifters get the same loading logic proven gyms use." } },
-        { "@type": "Question", name: "What equipment do I need?", acceptedAnswer: { "@type": "Answer", text: "Devotion adapts to what you have. Full gym, home gym, dumbbells only, minimal, or pure bodyweight." } },
-        { "@type": "Question", name: "How is this different from Strong, Hevy, or Caliber?", acceptedAnswer: { "@type": "Answer", text: "Strong and Hevy log; they don't program. Caliber pairs you with a human coach for £150+/month. Devotion programs the work, captures it, and writes you a Sunday review for the price of a sandwich." } },
-        { "@type": "Question", name: "What if I miss a week?", acceptedAnswer: { "@type": "Answer", text: "The program reshapes. No streak to break. The next session reads your last entries and the cycle adjusts." } },
-        { "@type": "Question", name: "Is this for women too?", acceptedAnswer: { "@type": "Answer", text: "Yes. The programming engine cares about your starting strength, recovery, and goals — not your sex." } },
-        { "@type": "Question", name: "When does it launch?", acceptedAnswer: { "@type": "Answer", text: "When the first 100 founders sign up. The founder lifetime price is the launch threshold." } },
-        { "@type": "Question", name: "Can I cancel anytime?", acceptedAnswer: { "@type": "Answer", text: "Monthly and annual cancel any time. Founder is one payment, yours forever." } },
+        { "@type": "Offer", name: "Monthly", price: "6.99", priceCurrency: "GBP" },
+        { "@type": "Offer", name: "Annual",  price: "49.00", priceCurrency: "GBP" },
+        { "@type": "Offer", name: "Founder", price: "75.00", priceCurrency: "GBP" },
       ],
     },
   ];
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
-  );
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
 }
