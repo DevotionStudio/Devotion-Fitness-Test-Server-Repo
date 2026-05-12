@@ -1,0 +1,27 @@
+# Workspace experiments — never ship to prod
+logo-exports/
+logo-lab/
+brand-kit/
+scripts/
+brain/
+
+# Drafts / one-off docs
+GPT-BUNDLE.md
+codex-prompt.md
+codex-redesign-brief.md
+devotion-gpt-preview.html
+tmpbundle-out.txt
+
+# Local builds / caches (also in .gitignore, belt-and-braces)
+.next
+out
+node_modules
+.claude
+.playwright-mcp
+prompt-runs
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.idea
+.vscode
