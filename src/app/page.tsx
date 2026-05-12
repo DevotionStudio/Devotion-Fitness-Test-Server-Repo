@@ -115,7 +115,7 @@ function Hero() {
           <h1>
             <Word text="Train" baseDelay={0.4} />{" "}
             <Word text="with" baseDelay={0.74} />{" "}
-            <BrandWordmark size="xl" className="hero3__brand-logo" />
+            <Word text="devotion" baseDelay={1.06} className="word--devotion" />
             <span className="hero3__period">.</span>
           </h1>
         </div>
