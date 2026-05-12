@@ -136,6 +136,37 @@
     color: var(--ink);
     background: var(--bone);
   }
+  .brand-wordmark,
+  .brand-mark {
+    display: block;
+    flex-shrink: 0;
+    object-fit: contain;
+    user-select: none;
+  }
+  .brand-wordmark {
+    width: auto;
+    height: 2.35em;
+  }
+  .brand-mark {
+    width: 1em;
+    height: 1em;
+  }
+  .brand-wordmark--inline {
+    display: inline-block;
+    width: auto;
+    height: 1.16em;
+    margin: -0.18em 0.02em -0.23em;
+    vertical-align: -0.24em;
+  }
+  .nav3__brand .brand-wordmark {
+    height: 32px;
+    margin: -7px 0;
+  }
+  .foot3__brand .brand-wordmark,
+  .foot__brand .brand-wordmark {
+    height: 44px;
+    margin: -8px 0;
+  }
   .container-d {
     padding-left: clamp(20px, 5vw, 64px);
     padding-right: clamp(20px, 5vw, 64px);

@@ -2,6 +2,7 @@
 
 import "./v3-home.css";
 import Link from "next/link";
+import { BrandName, BrandWordmark } from "@/components/wordmark";
 import { useEffect, useRef } from "react";
 
 const MOVES = [
@@ -20,19 +21,19 @@ const TICKER_GROUP = [
   { value: "2.4s",       label: "avg coach response" },
 ];
 
-const FAQS: Array<[string, string]> = [
-  ["Who is Devotion for?",
-    "Anyone who's serious about training but tired of juggling three apps. Beginners get structure; experienced lifters get progression without the spreadsheet admin."],
-  ["What equipment do I need?",
-    "The plan adapts to a full gym, home gym, dumbbells only, minimal kit, or pure bodyweight. Tell us what you have, the plan builds around it."],
-  ["How does the AI coach work?",
-    "It reads your last sessions, your readiness, and your goals. It suggests easier or harder sets mid-workout, swaps exercises when the rack's busy, and answers questions in plain language."],
-  ["What about cutting and bulking?",
-    "Set your goal phase (cut / bulk / maintain). Calorie and macro targets adapt automatically. Switch phases anytime — the plan adjusts."],
-  ["Is there a free version?",
-    "Yes. Free covers logging, routines, and the basics. Upgrade when you want the AI coach, smart plan generator, and goal phases."],
-  ["When is the app launching?",
-    "Founder access is open now — first 500 lifters lock lifetime pricing. Public launch follows."],
+const FAQS: Array<[string, React.ReactNode]> = [
+  ["Do I need a gym, or does this work at home?",
+    <><strong>Both.</strong> Tell <BrandName /> what equipment you've got — full commercial gym, garage with a rack and dumbbells, or just a resistance band — and the plan adapts. Same app, no separate "home" mode. Travel for a week? Switch your equipment and the plan rebuilds in a tap.</>],
+  ["Is the AI coach actually useful, or is it gimmicky?",
+    <>It reads <strong>your</strong> last 30 days — sets, reps, weights, calories, sleep, readiness — before it says a word. So when it tells you to drop the weight on set 4, it's because your bar speed is down 18% and you're under-recovered. Not because of a generic rule.</>],
+  ["How is this different from MyFitnessPal + Hevy?",
+    <>Two apps that don't talk to each other vs. one that does. <BrandName /> sees that you're cutting, that you ate 2,180 kcal yesterday, that today is push day, and that your shoulder is at 78% readiness — and shapes the session accordingly. That's the whole pitch.</>],
+  ["Will it import my Strong / Hevy / spreadsheet history?",
+    <>Yes. CSV import on day one for all the major trackers. Your PRs come with you so the coach knows where you've been before it tells you where to go.</>],
+  ["What happens if I cancel?",
+    <>You keep your data forever — export to CSV any time, including after you cancel. The app drops to a read-only free tier so your history doesn't disappear. We don't hold your sets hostage.</>],
+  ["When does the iOS app land?",
+    <>TestFlight in <strong>summer 2026</strong>, public App Store shortly after. Founder members get first access. The web app works on phone today — install it to your home screen and you've got a PWA.</>],
 ];
 
 export default function Home() {
@@ -59,23 +60,14 @@ function SiteNav() {
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
-    const update = () => {
-      const hero = document.getElementById("hero3");
-      if (!hero) return;
-      const heroBottom = hero.getBoundingClientRect().bottom;
-      nav.classList.toggle("on-dark", heroBottom > 60);
-    };
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
+    // Keep the animated white wordmark on the dark glass nav.
+    nav.classList.add("on-dark");
   }, []);
   return (
-    <nav className="nav3" ref={navRef} aria-label="Primary">
-      <Link href="#top" className="nav3__brand"><span className="nav3__mark" aria-hidden />Devotion</Link>
+    <nav className="nav3 on-dark" ref={navRef} aria-label="Primary">
+      <Link href="#top" className="nav3__brand">
+        <BrandWordmark size="md" />
+      </Link>
       <a href="#why" className="nav3__link">Why</a>
       <a href="#how" className="nav3__link">How it works</a>
       <a href="#pricing" className="nav3__link">Pricing</a>
@@ -123,7 +115,7 @@ function Hero() {
           <h1>
             <Word text="Train" baseDelay={0.4} />{" "}
             <Word text="with" baseDelay={0.74} />{" "}
-            <Word text="devotion" baseDelay={1.06} className="word--devotion" />
+            <BrandWordmark size="xl" className="hero3__brand-logo" />
             <span className="hero3__period">.</span>
           </h1>
         </div>
@@ -241,7 +233,7 @@ function Ticker() {
 
 function Problem() {
   return (
-    <section className="section3 section3--washed" id="why">
+    <section className="section3 section3--dark" id="why">
       <div className="container">
         <div className="grid-2-end">
           <div>
@@ -249,11 +241,11 @@ function Problem() {
             <h2 className="h3-1" style={{ marginTop: 16 }}>Most people quit by <em className="accent3">week 6</em>.</h2>
             <p className="body3-lg" style={{ marginTop: 18 }}>
               Generic plans, stale spreadsheets, and three apps that don't talk to each other. We built
-              Devotion because the gap between knowing what to do and actually doing it is where every
+              <BrandName /> because the gap between knowing what to do and actually doing it is where every
               fitness journey dies.
             </p>
           </div>
-          <div className="stat3">
+          <div className="stat3 stat3--dark">
             <div className="stat3__label">UK gym dropout</div>
             <div className="stat3__big">73%</div>
             <div className="stat3__sub">Quit within 6 months of joining.</div>
@@ -286,7 +278,7 @@ function Moves() {
         <span className="moves3__kicker">How it works</span>
         <h2 className="moves3__title">Five things, <em>one app</em>.</h2>
         <p className="moves3__sub">
-          Plan, train, eat, recover, repeat. Devotion handles the loop so you can focus on showing up.
+          Plan, train, eat, recover, repeat. <BrandName /> handles the loop so you can focus on showing up.
         </p>
       </div>
       <ul className="moves3__list">
@@ -304,7 +296,7 @@ function Moves() {
 
 function Pricing() {
   return (
-    <section className="section3 section3--bone" id="pricing">
+    <section className="section3 section3--cream" id="pricing">
       <div className="container">
         <div className="pricing3__intro">
           <span className="eyebrow3 eyebrow3--violet">Simple pricing</span>
@@ -369,17 +361,21 @@ function Pricing() {
 
 function FAQ() {
   return (
-    <section className="section3" id="faq">
-      <div className="container grid-faq">
-        <div>
-          <span className="eyebrow3 eyebrow3--violet">FAQ</span>
-          <h2 className="h3-2" style={{ marginTop: 14 }}>Before you start.</h2>
+    <section className="section3 section3--dark faq3" id="faq">
+      <div className="container">
+        <div className="faq3__intro">
+          <span className="eyebrow3 eyebrow3--violet">Frequently asked</span>
+          <h2 className="faq3__title">The honest questions.</h2>
+          <p className="faq3__sub">No marketing dance. Quick answers to the things people actually ask before they sign up.</p>
         </div>
-        <div>
-          {FAQS.map(([q, a]) => (
-            <details className="faq3__row" key={q}>
-              <summary>{q}</summary>
-              <p className="faq3__answer">{a}</p>
+        <div className="faq3__list">
+          {FAQS.map(([q, a], i) => (
+            <details className="faq3__row" key={i} open={i === 0}>
+              <summary>
+                <span>{q}</span>
+                <span className="faq3__plus" aria-hidden>+</span>
+              </summary>
+              <div className="faq3__answer">{a}</div>
             </details>
           ))}
         </div>
@@ -390,13 +386,13 @@ function FAQ() {
 
 function FinalCTA() {
   return (
-    <section className="cta3">
-      <div className="cta3__inner">
-        <h2>Train with devotion. Today.</h2>
-        <p>Lock founder pricing while it's open. £75 once, every feature, forever.</p>
-        <div className="cta3__row">
-          <Link href="/onboarding" className="btn3 btn3--accent">Become a founder</Link>
-          <a href="#pricing" className="btn3 btn3--ghost-dark">See all plans</a>
+    <section className="cta3 cta-stage" id="cta">
+      <div className="container">
+        <h2>Train with <BrandWordmark size="xl" className="cta3__brand-logo" />.</h2>
+        <p>Start free. No credit card. Your first AI-built plan in 90 seconds.</p>
+        <div className="cta3__row cta-stage__row">
+          <Link href="/onboarding" className="btn3 btn3--accent">Start free →</Link>
+          <Link href="/onboarding" className="btn3 btn3--ghost-dark">Become a founder · £75</Link>
         </div>
       </div>
     </section>
@@ -409,8 +405,10 @@ function SiteFooter() {
       <div className="container">
         <div className="foot3__grid">
           <div>
-            <div className="foot3__brand"><span className="foot3__brand-mark" aria-hidden />Devotion</div>
-            <p className="foot3__tag">Train with devotion. The plan, the numbers, the coach — one app that gets you to the next session.</p>
+            <div className="foot3__brand">
+              <BrandWordmark size="lg" />
+            </div>
+            <p className="foot3__tag">Train with <BrandName />. The plan, the numbers, the coach — one app that gets you to the next session.</p>
           </div>
           <div className="foot3__col">
             <h4>Product</h4>

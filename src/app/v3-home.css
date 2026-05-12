@@ -8,8 +8,8 @@ body:has(.v3-root)::before,
 body:has(.v3-root)::after { display: none !important; }
 body:has(.v3-root) > .cursor-glow { display: none !important; }
 body:has(.v3-root) {
-  background: #FAF7F2 !important;
-  color: #1A1326 !important;
+  background: #0B0815 !important;
+  color: #FAF7F2 !important;
   font-feature-settings: normal;
   letter-spacing: 0;
 }
@@ -54,8 +54,8 @@ body:has(.v3-root) {
   --shadow-lg: 0 30px 60px -20px rgba(11, 8, 21, 0.22);
 
   font-family: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
-  color: var(--text-1);
-  background: var(--cream-0);
+  color: var(--bone);
+  background: var(--ink-0);
   min-height: 100vh;
   letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
@@ -69,7 +69,7 @@ body:has(.v3-root) {
   letter-spacing: -0.03em;
   line-height: 1.05;
   margin: 0;
-  color: var(--ink-0);
+  color: inherit;
 }
 
 .v3-root .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
@@ -100,24 +100,25 @@ body:has(.v3-root) {
 .v3-root .nav3.on-dark .nav3__brand { border-right-color: rgba(255, 255, 255, 0.12); }
 .v3-root .nav3.on-dark .nav3__cta { background: var(--bone); color: var(--ink-0); }
 .v3-root .nav3__brand {
-  display: flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 0;
   font-weight: 700; font-size: 16px; letter-spacing: -0.025em;
   color: var(--ink-0); padding-right: 14px;
   border-right: 1px solid var(--cream-line);
   margin-right: 4px;
   flex-shrink: 0;
+  line-height: 1;
+  transition: color .3s, border-color .3s;
 }
-.v3-root .nav3__mark {
-  width: 22px; height: 22px; border-radius: 7px;
-  background: linear-gradient(135deg, var(--violet) 0%, var(--violet-deep) 100%);
-  box-shadow: 0 0 12px var(--violet-glow);
-  position: relative; flex-shrink: 0;
+.v3-root .nav3__v-mark {
+  width: 20px; height: 20px;
+  display: inline-block;
+  vertical-align: -3px;
+  margin: 0 -1px;
+  filter: drop-shadow(0 0 6px rgba(var(--violet-rgb), 0.45));
+  flex-shrink: 0;
 }
-.v3-root .nav3__mark::after {
-  content: ""; position: absolute; inset: 5px;
-  border-radius: 2px;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6), transparent 70%);
-}
+/* legacy mark kept as no-op so any stale ref doesn't break layout */
+.v3-root .nav3__mark { display: none; }
 .v3-root .nav3__link {
   padding: 7px 12px; border-radius: 999px;
   font-size: 14px; font-weight: 500;
@@ -304,6 +305,16 @@ body:has(.v3-root) {
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+.v3-root .hero3__brand-logo {
+  display: inline-block;
+  height: .98em;
+  width: auto;
+  margin: -0.18em -0.02em -0.17em 0.04em;
+  vertical-align: -0.18em;
+  opacity: 0;
+  transform: translateY(18%);
+  animation: v3FadeUp .9s var(--ease-out-expo) 1.06s forwards;
+}
 .v3-root .hero3__period {
   display: inline-block;
   color: var(--violet);
@@ -486,18 +497,33 @@ body:has(.v3-root) {
 .v3-root .ticker3__sep { color: rgba(255, 255, 255, 0.25); }
 
 /* ─── SECTIONS ─── */
-.v3-root .section3 { padding: 120px 0; background: var(--cream-0); overflow: hidden; position: relative; }
-.v3-root .section3--bone { background: var(--bone); border-top: 1px solid var(--cream-line); border-bottom: 1px solid var(--cream-line); }
-/* NEW: subtle violet wash on the problem section per Owen's note */
-.v3-root .section3--washed::before {
-  content: ""; position: absolute; inset: 0;
+.v3-root .section3 { padding: 140px 0 120px; background: var(--ink-0); color: var(--bone); overflow: hidden; position: relative; isolation: isolate; }
+.v3-root .section3--cream { background: var(--cream-0); color: var(--text-1); padding: 140px 0 120px; }
+.v3-root .section3--dark {
   background:
-    radial-gradient(ellipse 60% 40% at 12% 0%, rgba(var(--violet-rgb), 0.06), transparent 60%),
-    radial-gradient(ellipse 50% 35% at 88% 80%, rgba(var(--violet-deep-rgb), 0.05), transparent 65%);
-  pointer-events: none;
-  z-index: 0;
+    radial-gradient(ellipse 55% 40% at 85% 12%, rgba(var(--violet-rgb), 0.20), transparent 60%),
+    radial-gradient(ellipse 45% 35% at 8% 85%, rgba(var(--violet-deep-rgb), 0.16), transparent 62%),
+    var(--ink-0);
+  color: var(--bone);
+}
+.v3-root .section3--dark::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, #000 30%, transparent 80%);
+  pointer-events: none; z-index: 0;
 }
 .v3-root .section3 > .container { position: relative; z-index: 1; }
+
+/* Headline + body colour overrides inside dark sections */
+.v3-root .section3--dark .h3-1 { color: var(--bone); }
+.v3-root .section3--dark .h3-2 { color: var(--bone); }
+.v3-root .section3--dark .body3-lg { color: rgba(247,245,240,0.78); }
+.v3-root .section3--dark .body3-lg strong { color: var(--bone); }
+.v3-root .section3--dark em.accent3 { color: var(--violet-2); text-shadow: 0 0 40px rgba(var(--violet-rgb), 0.45); }
 
 .v3-root .eyebrow3 {
   font-weight: 600; font-size: 11px;
@@ -520,6 +546,36 @@ body:has(.v3-root) {
 .v3-root .stat3__breakdown { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--cream-line); padding-top: 20px; gap: 20px; }
 .v3-root .stat3__cell-value { font-weight: 600; font-size: 24px; letter-spacing: -0.02em; color: var(--ink-0); font-variant-numeric: tabular-nums; }
 .v3-root .stat3__cell-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); font-weight: 600; margin-top: 4px; }
+
+/* Dark variant — sits on dark stage in the problem section */
+.v3-root .stat3--dark {
+  background: linear-gradient(160deg, rgba(31,24,44,0.72), rgba(11,8,21,0.85));
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 30px 60px -28px rgba(0,0,0,0.55),
+              0 0 60px -28px rgba(var(--violet-rgb), 0.35),
+              inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.v3-root .stat3--dark::after {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 28px;
+  background: radial-gradient(ellipse 80% 50% at 100% 0%, rgba(var(--violet-rgb), 0.18), transparent 60%);
+  pointer-events: none;
+}
+.v3-root .stat3--dark > * { position: relative; z-index: 1; }
+.v3-root .stat3--dark .stat3__label { color: rgba(247,245,240,0.55); }
+.v3-root .stat3--dark .stat3__big {
+  color: var(--bone);
+  background: linear-gradient(180deg, #fff 0%, #c4b5fd 60%, var(--violet) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.v3-root .stat3--dark .stat3__sub { color: rgba(247,245,240,0.6); }
+.v3-root .stat3--dark .stat3__bar { background: rgba(255,255,255,0.06); }
+.v3-root .stat3--dark .stat3__bar-fill { box-shadow: 0 0 14px rgba(var(--violet-rgb), 0.55); }
+.v3-root .stat3--dark .stat3__breakdown { border-top-color: rgba(255,255,255,0.08); }
+.v3-root .stat3--dark .stat3__cell-value { color: var(--bone); }
+.v3-root .stat3--dark .stat3__cell-label { color: rgba(247,245,240,0.5); }
 
 /* ─── MOVES (dark stage) ─── */
 .v3-root .moves3 {
@@ -571,27 +627,101 @@ body:has(.v3-root) {
 .v3-root .pricing3__card-list li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--violet); margin-top: 7px; flex-shrink: 0; }
 .v3-root .pricing3__card .btn3 { width: 100%; }
 
-/* ─── FAQ ─── */
-.v3-root .faq3__row { border-bottom: 1px solid var(--cream-line); padding: 22px 0; cursor: pointer; }
-.v3-root .faq3__row > summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 24px; font-size: clamp(17px, 1.5vw, 20px); font-weight: 600; color: var(--ink-0); letter-spacing: -0.015em; }
-.v3-root .faq3__row > summary::-webkit-details-marker { display: none; }
-.v3-root .faq3__row > summary::after { content: "+"; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--cream-line-strong); display: inline-flex; align-items: center; justify-content: center; color: var(--violet); font-size: 18px; font-weight: 400; flex-shrink: 0; transition: transform .25s var(--ease-out-expo); }
-.v3-root .faq3__row[open] > summary::after { transform: rotate(45deg); }
-.v3-root .faq3__answer { padding-top: 14px; font-size: 15px; line-height: 1.6; color: var(--text-2); max-width: 640px; }
-
-/* ─── FINAL CTA ─── */
-.v3-root .cta3 {
+/* ─── FAQ (dark) ─── */
+.v3-root .faq3 {
   background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(var(--violet-rgb), 0.32), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 12% 18%, rgba(var(--violet-rgb), 0.18), transparent 62%),
+    radial-gradient(ellipse 50% 38% at 88% 78%, rgba(var(--violet-deep-rgb), 0.16), transparent 62%),
     var(--ink-0);
-  color: var(--bone);
-  padding: 96px 0;
-  overflow: hidden; position: relative;
 }
-.v3-root .cta3__inner { max-width: 760px; margin: 0 auto; text-align: center; padding: 0 28px; }
-.v3-root .cta3 h2 { color: #fff; font-size: clamp(36px, 5vw, 64px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 600; margin-bottom: 18px; }
-.v3-root .cta3 p { color: rgba(255, 255, 255, 0.78); font-size: clamp(15px, 1.2vw, 18px); line-height: 1.55; max-width: 540px; margin: 0 auto 32px; }
+.v3-root .faq3__intro { max-width: 720px; margin: 0 auto 56px; text-align: center; }
+.v3-root .faq3__title { margin: 14px 0 14px; font-size: clamp(34px, 4.6vw, 60px); line-height: 1.04; letter-spacing: -0.032em; font-weight: 600; color: var(--bone); }
+.v3-root .faq3__sub { font-size: clamp(15px, 1.15vw, 18px); line-height: 1.55; color: rgba(247,245,240,0.62); max-width: 540px; margin: 0 auto; }
+.v3-root .faq3__list { max-width: 820px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.08); }
+.v3-root .faq3__row { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 0; }
+.v3-root .faq3__row[open] .faq3__plus { transform: rotate(45deg); color: var(--violet-2); }
+.v3-root .faq3__row[open] > summary { color: #fff; }
+.v3-root .faq3__row > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 26px 8px;
+  font-size: clamp(16px, 1.25vw, 19px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--bone);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px;
+  transition: color .2s;
+}
+.v3-root .faq3__row > summary::-webkit-details-marker { display: none; }
+.v3-root .faq3__row > summary:hover { color: #fff; }
+.v3-root .faq3__plus {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--violet);
+  font-size: 22px; font-weight: 400;
+  line-height: 1;
+  transition: transform .3s var(--ease-out-expo), color .2s;
+}
+.v3-root .faq3__answer {
+  padding: 0 8px 26px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(247,245,240,0.78);
+  max-width: 680px;
+}
+.v3-root .faq3__answer strong { color: var(--bone); font-weight: 600; }
+
+/* ─── FINAL CTA STAGE ─── */
+.v3-root .cta-stage {
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(var(--violet-rgb), 0.28), transparent 65%),
+    var(--ink-0);
+  padding: clamp(80px, 10vw, 140px) 0;
+  overflow: hidden;
+  isolation: isolate;
+  text-align: center;
+  color: var(--bone);
+}
+.v3-root .cta-stage::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.014) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.014) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 30%, transparent 80%);
+  pointer-events: none; z-index: 0;
+}
+.v3-root .cta-stage > .container { position: relative; z-index: 1; }
+.v3-root .cta-stage h2 {
+  margin: 0 0 18px;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05; letter-spacing: -0.034em;
+  font-weight: 600;
+  color: var(--bone);
+}
+.v3-root .cta3__brand-logo {
+  display: inline-block;
+  height: .95em;
+  width: auto;
+  margin: -0.16em -0.03em -0.16em 0.03em;
+  vertical-align: -0.16em;
+}
+.v3-root .cta-stage h2 em { font-style: normal; color: var(--violet-2); }
+.v3-root .cta-stage p {
+  margin: 0 auto 28px;
+  max-width: 540px;
+  font-size: clamp(15px, 1.15vw, 18px);
+  line-height: 1.55;
+  color: rgba(247,245,240,0.65);
+}
+.v3-root .cta-stage__row,
 .v3-root .cta3__row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+/* legacy cta3 wrapper kept harmless — only cta-stage renders now */
+.v3-root .cta3__inner { max-width: 760px; margin: 0 auto; padding: 0 28px; }
 
 /* ─── FOOTER ─── */
 .v3-root .foot3 {
@@ -607,8 +737,23 @@ body:has(.v3-root) {
 .v3-root .foot3 > * { position: relative; z-index: 1; }
 .v3-root .foot3__grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; padding-bottom: 48px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
 @media (max-width: 860px) { .v3-root .foot3__grid { grid-template-columns: 1fr 1fr; } }
-.v3-root .foot3__brand { display: flex; align-items: center; gap: 8px; font-weight: 700; color: #fff; font-size: 17px; margin-bottom: 16px; letter-spacing: -0.02em; }
-.v3-root .foot3__brand-mark { width: 24px; height: 24px; border-radius: 7px; background: linear-gradient(135deg, var(--violet) 0%, var(--violet-deep) 100%); box-shadow: 0 0 12px var(--violet-glow); }
+.v3-root .foot3__brand {
+  display: inline-flex; align-items: center; gap: 0;
+  font-weight: 700; color: #fff; font-size: 17px;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.v3-root .foot3__v-mark {
+  width: 24px; height: 24px;
+  display: inline-block;
+  vertical-align: -4px;
+  margin: 0 -1px;
+  filter: drop-shadow(0 0 8px rgba(var(--violet-rgb), 0.5));
+  flex-shrink: 0;
+}
+/* legacy mark kept as no-op */
+.v3-root .foot3__brand-mark { display: none; }
 .v3-root .foot3__tag { font-size: 13.5px; max-width: 280px; line-height: 1.55; }
 .v3-root .foot3__col h4 { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); font-weight: 600; margin: 0 0 14px; }
 .v3-root .foot3__col a { display: block; font-size: 14px; color: rgba(255, 255, 255, 0.78); padding: 4px 0; transition: color .15s; }
